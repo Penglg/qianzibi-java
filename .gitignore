@@ -1,0 +1,27 @@
+.idea
+# backend
+/workspace/HELP.md
+/workspace/target/
+/workspace/.mvn
+/qianzibi-java/qianzibi-api/target/
+/qianzibi-java/qianzibi-admin/target/
+/qianzibi-java/qianzibi-common/target/
+
+### STS ###
+/.apt_generated
+/.classpath
+/.factorypath
+/.project
+/.settings
+/.springBeans
+/.sts4-cache
+
+### IntelliJ IDEA ###
+/.idea
+/*.iws
+/*.iml
+/*.ipr
+/qianzibi-java/qianzibi-admin/qianzibi-admin.iml
+/qianzibi-java/qianzibi-api/qianzibi-api.iml
+/qianzibi-java/qianzibi-common/qianzibi-common.iml
+/qianzibi-java/qianzibi-java.iml

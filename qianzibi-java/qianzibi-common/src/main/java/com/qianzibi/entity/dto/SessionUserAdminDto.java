@@ -1,5 +1,6 @@
 package com.qianzibi.entity.dto;
 
+import com.qianzibi.entity.vo.SysMenuVO;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,7 +18,7 @@ public class SessionUserAdminDto implements Serializable {
 
     private Boolean superAdmin;
 
-//    private List<SysMenuVO> menuList;
+    private List<SysMenuVO> menuList;
 
     private List<String> permissionCodeList;
 

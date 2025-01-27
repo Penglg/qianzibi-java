@@ -2,14 +2,23 @@ package com.qianzibi.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qianzibi.entity.dto.SessionUserAdminDto;
+import com.qianzibi.entity.po.SysMenu;
+import com.qianzibi.entity.query.SysMenuQuery;
+import com.qianzibi.entity.vo.SysMenuVO;
 import com.qianzibi.exception.BusinessException;
 import com.qianzibi.entity.enums.SysAccountStatusEnum;
 import com.qianzibi.entity.po.SysAccount;
 import com.qianzibi.service.SysAccountService;
 import com.qianzibi.mapper.SysAccountMapper;
+import com.qianzibi.service.SysMenuService;
+import com.qianzibi.utils.CopyTools;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
 * @author 86158
@@ -22,8 +31,11 @@ public class SysAccountServiceImpl extends ServiceImpl<SysAccountMapper, SysAcco
     @Resource
     private SysAccountMapper sysAccountMapper;
 
+    @Resource
+    private SysMenuService sysMenuService;
+
     @Override
-    public void login(String phone, String password) {
+    public SessionUserAdminDto login(String phone, String password) {
         LambdaQueryWrapper<SysAccount> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SysAccount::getPhone, phone);
         SysAccount sysAccount = sysAccountMapper.selectOne(queryWrapper);
@@ -36,6 +48,34 @@ public class SysAccountServiceImpl extends ServiceImpl<SysAccountMapper, SysAcco
         if (!sysAccount.getPassword().equals(password)) {
             throw new BusinessException("账号或密码错误");
         }
+
+        // 获取菜单
+        SysMenuQuery query = new SysMenuQuery();
+        query.setFormate2Tree(false);
+        query.setOrderByAsc("sort");
+        List<SysMenu> sysMenuList = sysMenuService.findLisByParam(query);
+        // 获取权限
+        List<String> permissionCodeList = new ArrayList<>();
+        sysMenuList.forEach(item -> {
+            permissionCodeList.add(item.getPermissionCode());
+        });
+
+        sysMenuList = sysMenuService.convertLine2Tree4Menu(sysMenuList, 0);
+        // 菜单封装vo
+        List<SysMenuVO> menuVOList = new ArrayList<>();
+        sysMenuList.forEach(item -> {
+            SysMenuVO menuVO = CopyTools.copy(item, SysMenuVO.class);
+            menuVO.setChildren(CopyTools.copyList(item.getChildren(), SysMenuVO.class));
+            menuVOList.add(menuVO);
+        });
+
+        SessionUserAdminDto adminDto = new SessionUserAdminDto();
+        adminDto.setSuperAdmin(true);
+        adminDto.setUserId(sysAccount.getUserId());
+        adminDto.setUserName(sysAccount.getUserName());
+        adminDto.setMenuList(menuVOList);
+        adminDto.setPermissionCodeList(permissionCodeList);
+        return adminDto;
     }
 }
 

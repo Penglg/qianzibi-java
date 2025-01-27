@@ -1,5 +1,6 @@
 package com.qianzibi.service;
 
+import com.qianzibi.entity.dto.SessionUserAdminDto;
 import com.qianzibi.entity.po.SysAccount;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -10,5 +11,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface SysAccountService extends IService<SysAccount> {
 
-    void login(String phone, String password);
+    SessionUserAdminDto login(String phone, String password);
 }

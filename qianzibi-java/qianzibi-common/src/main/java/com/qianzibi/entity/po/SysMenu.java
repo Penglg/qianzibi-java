@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.qianzibi.annotation.VerifyParam;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -25,11 +26,13 @@ public class SysMenu implements Serializable {
     /**
      * 菜单名
      */
+    @VerifyParam(required = true, max = 32)
     private String menuName;
 
     /**
      * 菜单类型 0：菜单. 1:按钮.
      */
+    @VerifyParam(required = true)
     private Integer menuType;
 
     /**
@@ -40,21 +43,25 @@ public class SysMenu implements Serializable {
     /**
      * 上级菜单ID
      */
+    @VerifyParam(required = true)
     private Integer pId;
 
     /**
      * 菜单排序
      */
+    @VerifyParam(required = true)
     private Integer sort;
 
     /**
      * 权限编码
      */
+    @VerifyParam(required = true, max = 50)
     private String permissionCode;
 
     /**
      * 图标
      */
+//    @VerifyParam(required = true, max = 50)
     private String icon;
 
     /**

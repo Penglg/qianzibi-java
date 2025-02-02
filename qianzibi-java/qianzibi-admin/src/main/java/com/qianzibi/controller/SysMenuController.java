@@ -1,6 +1,7 @@
 package com.qianzibi.controller;
 
 import com.qianzibi.annotation.Check;
+import com.qianzibi.annotation.VerifyParam;
 import com.qianzibi.entity.enums.PermissionCodeEnum;
 import com.qianzibi.entity.po.SysMenu;
 import com.qianzibi.entity.query.SysMenuQuery;
@@ -14,7 +15,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/setting")
+@RequestMapping("/settings")
 public class SysMenuController{
     @Resource
     private SysMenuService sysMenuService;
@@ -35,5 +36,19 @@ public class SysMenuController{
         query.setOrderByAsc("sort");
         List<SysMenu> menuList = sysMenuService.findLisByParam(query);
         return R.ok().data(menuList);
+    }
+
+    @PostMapping("/saveMenu")
+    @Check(permissionCode = PermissionCodeEnum.SETTINGS_MENU_EDIT)
+    public R saveMenu(@VerifyParam SysMenu sysMenu) {
+        sysMenuService.saveMenu(sysMenu);
+        return R.ok().data(null);
+    }
+
+    @PostMapping("/deleteMenu")
+    @Check(permissionCode = PermissionCodeEnum.SETTINGS_MENU_EDIT)
+    public R deleteMenu(@VerifyParam Integer menuId) {
+        sysMenuService.deleteMenu(menuId);
+        return R.ok();
     }
 }

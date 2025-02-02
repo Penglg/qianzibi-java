@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class SysRoleQuery extends BaseParam {
+public class SysRoleQuery extends PageRequest {
     /**
      * 角色ID
      */

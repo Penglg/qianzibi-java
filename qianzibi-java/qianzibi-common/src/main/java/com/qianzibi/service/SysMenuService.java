@@ -16,4 +16,8 @@ public interface SysMenuService extends IService<SysMenu> {
     List<SysMenu> findLisByParam(SysMenuQuery query);
 
     List<SysMenu> convertLine2Tree4Menu(List<SysMenu> menuList, Integer pid);
+
+    void saveMenu(SysMenu sysMenu);
+
+    void deleteMenu(Integer menuId);
 }

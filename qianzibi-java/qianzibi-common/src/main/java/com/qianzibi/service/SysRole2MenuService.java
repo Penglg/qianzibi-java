@@ -9,5 +9,4 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2025-01-26 17:10:17
 */
 public interface SysRole2MenuService extends IService<SysRole2Menu> {
-
 }

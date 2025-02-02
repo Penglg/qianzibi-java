@@ -2,8 +2,10 @@ package com.qianzibi.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qianzibi.common.ResultCode;
 import com.qianzibi.entity.po.SysMenu;
 import com.qianzibi.entity.query.SysMenuQuery;
+import com.qianzibi.exception.BusinessException;
 import com.qianzibi.service.SysMenuService;
 import com.qianzibi.mapper.SysMenuMapper;
 import org.springframework.stereotype.Service;
@@ -12,13 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
-* @author 86158
-* @description 针对表【sys_menu(菜单表)】的数据库操作Service实现
-* @createDate 2025-01-26 17:09:06
-*/
+ * @author 86158
+ * @description 针对表【sys_menu(菜单表)】的数据库操作Service实现
+ * @createDate 2025-01-26 17:09:06
+ */
 @Service
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
-    implements SysMenuService{
+        implements SysMenuService {
 
     public static final Integer DEFAULT_ROOT_MENU_ID = 0;
     private static final String ROOT_MENU_NAME = "所有菜单";
@@ -58,6 +60,33 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
             }
         }
         return children;
+    }
+
+    /**
+     * 新增或修改菜单
+     */
+    @Override
+    public void saveMenu(SysMenu sysMenu) {
+        if (sysMenu.getMenuId() == null) {
+            baseMapper.insert(sysMenu);
+        } else {
+            if (sysMenu.getPId().equals(sysMenu.getMenuId())) {
+                throw new BusinessException(ResultCode.ERROR_OTHER, "菜单的父菜单不能为自己");
+            }
+            this.baseMapper.updateById(sysMenu);
+        }
+    }
+
+    /**
+     * 删除菜单
+     */
+    @Override
+    public void deleteMenu(Integer menuId) {
+        if (menuId != null) {
+            baseMapper.deleteById(menuId);
+        } else {
+            throw new BusinessException(ResultCode.ERROR_NAN, "删除参数异常");
+        }
     }
 }
 

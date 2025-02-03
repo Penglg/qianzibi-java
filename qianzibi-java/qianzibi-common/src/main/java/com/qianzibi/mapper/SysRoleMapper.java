@@ -11,6 +11,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface SysRoleMapper extends BaseMapper<SysRole> {
 
+    String selectRoleNames(String roles);
+
 }
 
 

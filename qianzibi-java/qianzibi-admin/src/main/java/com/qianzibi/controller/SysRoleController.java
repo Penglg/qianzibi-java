@@ -34,6 +34,8 @@ public class SysRoleController {
         BeanUtils.copyProperties(query, sysRoleQuery);
         LambdaQueryWrapper<SysRole> queryWrapper = new LambdaQueryWrapper<>(sysRoleQuery);
         queryWrapper.orderByDesc(SysRole::getCreateTime);
+        queryWrapper.like(query.getRoleNameFuzzy() != null, SysRole::getRoleName, query.getRoleNameFuzzy());
+        queryWrapper.like(query.getRoleDescFuzzy() != null, SysRole::getRoleDesc, query.getRoleDescFuzzy());
         Page<SysRole> sysRolePage = sysRoleService.page(new Page<>(query.getCurrent(), query.getPageSize()), queryWrapper);
         return R.ok().data(sysRolePage);
     }

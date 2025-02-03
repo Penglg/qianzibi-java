@@ -90,15 +90,11 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
     /**
      * @Description 更改角色权限
      */
-    // TODO menuIds出现空指针
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveRoleMenu(Integer roleId, String menuIds, String halfMenuIds) {
         if (null == roleId || menuIds == null) {
-            System.out.println("********roleId********" + roleId);
-            System.out.println("********menuIds********" + menuIds);
             throw new BusinessException(ResponseCodeEnum.CODE_600);
-
         }
 
         // 删除当前角色ID已有角色对应
@@ -167,6 +163,22 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole>
         int count = baseMapper.deleteById(roleId);
         sysRole2MenuMapper.delete(new QueryWrapper<SysRole2Menu>().eq("role_id", roleId));
         return count;
+    }
+
+    @Override
+    public void setRolesNamesByRoles(List<SysAccount> sysAccounts) {
+        sysAccounts.forEach(sysAccount -> {
+            if (StringUtils.hasText(sysAccount.getRoles())) {
+                sysAccount.setRoleNames(sysRoleMapper.selectRoleNames(sysAccount.getRoles()));
+            }
+        });
+    }
+
+    @Override
+    public void setRolesNamesByRoles(SysAccount sysAccount) {
+        if (StringUtils.hasText(sysAccount.getRoles())) {
+            sysAccount.setRoleNames(sysRoleMapper.selectRoleNames(sysAccount.getRoles()));
+        }
     }
 }
 

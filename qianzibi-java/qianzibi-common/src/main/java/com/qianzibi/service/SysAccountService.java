@@ -12,4 +12,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface SysAccountService extends IService<SysAccount> {
 
     SessionUserAdminDto login(String phone, String password);
+
+    void saveAccountUser(SysAccount sysAccount);
 }

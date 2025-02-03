@@ -1,7 +1,10 @@
 package com.qianzibi.service;
 
+import com.qianzibi.entity.po.SysAccount;
 import com.qianzibi.entity.po.SysRole;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
 * @author 86158
@@ -17,4 +20,8 @@ public interface SysRoleService extends IService<SysRole> {
     SysRole getSysRoleByRoleId(Integer roleId);
 
     Integer deleteRole(Integer roleId);
+
+    void setRolesNamesByRoles(List<SysAccount> sysAccounts);
+
+    void setRolesNamesByRoles(SysAccount sysAccount);
 }

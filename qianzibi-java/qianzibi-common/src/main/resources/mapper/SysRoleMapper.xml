@@ -16,4 +16,8 @@
         role_id,role_name,role_desc,
         create_time,last_update_time
     </sql>
+
+    <select id="selectRoleNames" resultType="java.lang.String">
+        select GROUP_CONCAT(role_name SEPARATOR ',') from sys_role where FIND_IN_SET(role_id, ${roles});
+    </select>
 </mapper>

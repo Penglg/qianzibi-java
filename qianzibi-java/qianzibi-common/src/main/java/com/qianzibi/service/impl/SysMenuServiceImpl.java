@@ -9,8 +9,11 @@ import com.qianzibi.exception.BusinessException;
 import com.qianzibi.service.SysMenuService;
 import com.qianzibi.mapper.SysMenuMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,6 +27,9 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
 
     public static final Integer DEFAULT_ROOT_MENU_ID = 0;
     private static final String ROOT_MENU_NAME = "所有菜单";
+
+    @Resource
+    private SysMenuMapper sysMenuMapper;
 
     /**
      * 查询菜单
@@ -87,6 +93,22 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu>
         } else {
             throw new BusinessException(ResultCode.ERROR_NAN, "删除参数异常");
         }
+    }
+
+    /**
+     * 根据角色Id获取菜单
+     */
+    //此处bug
+    //Invalid bound statement (not found): com.neo.common.mapper.SysMenuMapper.selectAllMenuByRoleIds
+    @Override
+    public List<SysMenu> getAllMenuByRoleIds(String roleIds) {
+        if (!StringUtils.hasText(roleIds)) {
+            return new ArrayList<>();
+        }
+        int[] roleIdArray = Arrays.stream(roleIds.split(",")).mapToInt(Integer::valueOf).toArray();
+//        QueryWrapper queryWrapper = new QueryWrapper();
+//        queryWrapper.select("DISTINCT","*").exists("inner join sys_role_2_menu rm on m.menu_id = rm.menu_id ")
+        return sysMenuMapper.selectAllMenuByRoleIds(roleIdArray);
     }
 }
 

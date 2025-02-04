@@ -1,7 +1,6 @@
 package com.qianzibi.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qianzibi.annotation.Check;
 import com.qianzibi.annotation.VerifyParam;

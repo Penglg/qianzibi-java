@@ -3,14 +3,17 @@ package com.qianzibi.controller;
 import com.qianzibi.annotation.Check;
 import com.qianzibi.annotation.VerifyParam;
 import com.qianzibi.entity.dto.SessionUserAdminDto;
+import com.qianzibi.entity.po.SysAccount;
 import com.qianzibi.exception.BusinessException;
 import com.qianzibi.entity.constants.Constants;
 import com.qianzibi.entity.dto.CreateImageCode;
 import com.qianzibi.entity.enums.VerifyRegexEnum;
 import com.qianzibi.service.SysAccountService;
+import com.qianzibi.utils.MD5;
 import com.qianzibi.utils.R;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -47,12 +50,32 @@ public class LoginController {
                    @VerifyParam(required = true, regex = VerifyRegexEnum.PHONE) String phone,
                    @VerifyParam(required = true) String password,
                    @VerifyParam(required = true) String checkCode) {
-        if (!session.getAttribute(Constants.CHECK_CODE_KEY).equals(checkCode.toLowerCase())) {
+        if (session.getAttribute(Constants.CHECK_CODE_KEY) == null ||
+                !session.getAttribute(Constants.CHECK_CODE_KEY).equals(checkCode.toLowerCase())) {
             throw new BusinessException("图片验证码错误");
         }
         SessionUserAdminDto userAdminDto = sysAccountService.login(phone, password);
         session.setAttribute(Constants.SESSION_KEY, userAdminDto);
 
         return R.ok().data(userAdminDto);
+    }
+
+    @RequestMapping("/logout")
+    @Check(checkLogin = false)
+    public R logout(HttpSession session) {
+        session.invalidate();
+        return R.ok();
+    }
+
+    @PostMapping("/updateMyPwd")
+    @Check
+    public R updatePWD(HttpSession session,
+                       @VerifyParam(required = true, regex = VerifyRegexEnum.PASSWORD) String password) {
+        SessionUserAdminDto sessionUserAdminDto = (SessionUserAdminDto) session.getAttribute(Constants.SESSION_KEY);
+        SysAccount sysAccount = new SysAccount();
+        sysAccount.setPassword(MD5.encrypt(password));
+        sysAccount.setUserId(sessionUserAdminDto.getUserId());
+        sysAccountService.updateById(sysAccount);
+        return R.ok();
     }
 }

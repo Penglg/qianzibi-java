@@ -3,6 +3,9 @@ package com.qianzibi.aspect;
 import com.qianzibi.annotation.Check;
 import com.qianzibi.annotation.VerifyParam;
 import com.qianzibi.common.ResultCode;
+import com.qianzibi.entity.constants.Constants;
+import com.qianzibi.entity.dto.SessionUserAdminDto;
+import com.qianzibi.entity.enums.PermissionCodeEnum;
 import com.qianzibi.exception.BusinessException;
 import com.qianzibi.utils.VerifyUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -15,11 +18,15 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Arrays;
+import java.util.List;
 
 @Aspect
 @Component("operationAspect")
@@ -57,18 +64,14 @@ public class OperationAspect {
         if (check.checkParams()) {
             validateParams(method, arguments);
         }
-//        /**
-//         * 校验登陆
-//         */
-//        if (check.checkLogin()) {
-//            checkLogin();
-//        }
-//        /**
-//         * 校验权限
-//         */
-//        if (check.permissionCode() != null && check.permissionCode() != check.NO_PERMISSION) {
-//            checkPermission(check.permissionCode());
-//        }
+        // 校验登陆
+        if (check.checkLogin()) {
+            checkLogin();
+        }
+        // 校验权限
+        if (check.permissionCode() != null && check.permissionCode() != PermissionCodeEnum.NO_PERMISSION) {
+            checkPermission(check.permissionCode());
+        }
     }
 
     // 方法2
@@ -174,29 +177,31 @@ public class OperationAspect {
         }
     }
 
-//    /**
-//     * @Description 登陆校验
-//     */
-//    void checkLogin() {
-//        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-//        SessionUserAdminDto sessionUserAdminDto = (SessionUserAdminDto) request.getSession().getAttribute(Constants.SESSION_KEY);
-//        if (sessionUserAdminDto == null) {
-//            throw new EasyJobException(ResultCode.ERROR_LOGIN_OUT_TIME, "登陆超时");
-//        }
-//    }
-//
-//    /**
-//     * @throws EasyJobException 如果用户没有权限，则抛出业务异常
-//     * @Description 权限参数校验
-//     * @Param permissionCodeEnum 权限代码枚举
-//     */
-//    void checkPermission(PermissionCodeEnum permissionCodeEnum) {
-//        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-//        SessionUserAdminDto sessionUserAdminDto = (SessionUserAdminDto) request.getSession().getAttribute(Constants.SESSION_KEY);
-//        // 拿到所有权限编码
-//        List<String> permissionCodeList = sessionUserAdminDto.getPermissionCodeList();
-//        if (!permissionCodeList.contains(permissionCodeEnum.getCode())) {
-//            throw new EasyJobException(ResultCode.ERROR_NOPERMISSION, "权限不足");
-//        }
-//    }
+    /**
+     * 登陆校验
+     */
+    void checkLogin() {
+        // 这个RequestHandler是从ThreadLocal里面拿的，所以能够获取到
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        SessionUserAdminDto sessionUserAdminDto = (SessionUserAdminDto) request.getSession().getAttribute(Constants.SESSION_KEY);
+        if (sessionUserAdminDto == null) {
+            throw new BusinessException(ResultCode.ERROR_LOGIN_OUT_TIME, "登陆超时");
+        }
+    }
+
+    /**
+     * 权限参数校验
+     * @throws BusinessException 如果用户没有权限，则抛出业务异常
+     * permissionCodeEnum 权限代码枚举
+     */
+    void checkPermission(PermissionCodeEnum permissionCodeEnum) {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        SessionUserAdminDto sessionUserAdminDto = (SessionUserAdminDto) request.getSession().getAttribute(Constants.SESSION_KEY);
+        // 拿到所有权限编码
+        List<String> permissionCodeList = sessionUserAdminDto.getPermissionCodeList();
+        // 判断是否有该权限编码
+        if (!permissionCodeList.contains(permissionCodeEnum.getCode())) {
+            throw new BusinessException(ResultCode.ERROR_NOPERMISSION, "权限不足");
+        }
+    }
 }

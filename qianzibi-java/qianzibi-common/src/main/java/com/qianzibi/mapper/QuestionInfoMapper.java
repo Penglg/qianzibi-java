@@ -2,6 +2,10 @@ package com.qianzibi.mapper;
 
 import com.qianzibi.entity.po.QuestionInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
 * @author 86158
@@ -11,6 +15,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface QuestionInfoMapper extends BaseMapper<QuestionInfo> {
 
+    void updateBatchByQIFId(@Param("questionIds")List<String> list, @Param("query") QuestionInfo questionInfo);
+
+    void insertBatch(@Param("queryList") ArrayList<QuestionInfo> questionList);
 }
 
 

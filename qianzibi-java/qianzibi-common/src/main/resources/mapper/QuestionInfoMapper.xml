@@ -27,4 +27,87 @@
         create_user_name,read_count,collect_count,
         post_user_type
     </sql>
+
+    <update id="updateBatchByQIFId" parameterType="com.qianzibi.entity.query.QuestionInfoQuery">
+        UPDATE question_info
+        <set>
+            <if test="query.title != null">
+                title = #{query.title},
+            </if>
+            <if test="query.categoryId != null">
+                category_id = #{query.categoryId},
+            </if>
+            <if test="query.categoryName != null">
+                category_name = #{query.categoryName},
+            </if>
+            <if test="query.difficultyLevel != null">
+                difficulty_level = #{query.difficultyLevel},
+            </if>
+            <if test="query.question != null">
+                question = #{query.question},
+            </if>
+            <if test="query.answerAnalysis != null">
+                answer_analysis = #{query.answerAnalysis},
+            </if>
+            <if test="query.createTime != null">
+                create_time = #{query.createTime},
+            </if>
+            <if test="query.status != null">
+                status = #{query.status},
+            </if>
+            <if test="query.createUserId != null">
+                create_user_id = #{query.createUserId},
+            </if>
+            <if test="query.createUserName != null">
+                create_user_name = #{query.createUserName},
+            </if>
+            <if test="query.readCount != null">
+                read_count = #{query.readCount},
+            </if>
+            <if test="query.collectCount != null">
+                collect_count = #{query.collectCount},
+            </if>
+            <if test="query.postUserType != null">
+                post_user_type = #{query.postUserType},
+            </if>
+        </set>
+        where question_id in (<foreach item="item" collection="questionIds" separator=",">#{item}</foreach>)
+    </update>
+
+    <!-- 添加 （批量插入）-->
+    <insert id="insertBatch" parameterType="com.qianzibi.entity.po.QuestionInfo" useGeneratedKeys="true"
+            keyProperty="questionId">
+        INSERT INTO question_info(
+        title,
+        category_id,
+        category_name,
+        difficulty_level,
+        question,
+        answer_analysis,
+        create_time,
+        status,
+        create_user_id,
+        create_user_name,
+        read_count,
+        collect_count,
+        post_user_type
+        )values
+        <foreach collection="queryList" item="item" separator=",">
+            (
+            #{item.title},
+            #{item.categoryId},
+            #{item.categoryName},
+            #{item.difficultyLevel},
+            #{item.question},
+            #{item.answerAnalysis},
+            #{item.createTime},
+            #{item.status},
+            #{item.createUserId},
+            #{item.createUserName},
+            #{item.readCount},
+            #{item.collectCount},
+            #{item.postUserType}
+            )
+        </foreach>
+    </insert>
 </mapper>

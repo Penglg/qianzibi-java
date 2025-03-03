@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Random;
 
+/**
+ * 生成验证码图片
+ */
 @Data
 public class CreateImageCode {
     private int width = 160;

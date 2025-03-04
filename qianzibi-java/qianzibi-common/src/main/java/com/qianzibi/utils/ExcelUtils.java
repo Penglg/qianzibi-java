@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @Description excel工具类
+ * excel工具类
  */
 public class ExcelUtils {
     private static final Logger logger = LoggerFactory.getLogger(ExcelUtils.class);
@@ -38,6 +38,7 @@ public class ExcelUtils {
             is = file.getInputStream();
             Workbook workbook = WorkbookFactory.create(is);
             List<List<String>> listData = new ArrayList<>();
+            // 模板中有Sheet1、Sheet2、Sheet3，这里默认读第一个
             Sheet sheet = workbook.getSheetAt(0);
             if (sheet == null) {
                 throw new BusinessException(ResultCode.ERROR_OTHER, "excel文件解析失败");
@@ -48,6 +49,7 @@ public class ExcelUtils {
                     continue;
                 }
                 List<String> rowData = new ArrayList<>();
+                // 读一行
                 Row row = sheet.getRow(rowNumIndex);
                 if (row == null) {
                     continue;
@@ -58,6 +60,7 @@ public class ExcelUtils {
                     throw new BusinessException(ResultCode.ERROR_OTHER, "请按照模板文件上传数据");
                 }
                 for (int colIndex = 0; colIndex < maxColCount; colIndex++) {
+                    // 读一格
                     Cell cell = row.getCell(colIndex);
                     String cellValue = getCellValue(cell);
                     rowData.add(cellValue);
@@ -101,6 +104,7 @@ public class ExcelUtils {
         if (cell == null) {
             return "";
         }
+        //  数字
         if (cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
             DecimalFormat df = new DecimalFormat("#.##");
             return df.format(cell.getNumericCellValue());

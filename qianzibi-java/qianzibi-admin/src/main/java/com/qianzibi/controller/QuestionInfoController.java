@@ -59,6 +59,9 @@ public class QuestionInfoController {
         return R.ok();
     }
 
+    /**
+     * 查看Quesion详细时跳转上一条或下一条
+      */
     @PostMapping("/showQuestionDetailNext")
     @Check(permissionCode = PermissionCodeEnum.QUESTION_LIST)
     public R showQuestionDetailNext(QuestionInfoQuery query, Integer nextType,

@@ -66,8 +66,11 @@ public class QuestionInfoServiceImpl extends ServiceImpl<QuestionInfoMapper, Que
     }
 
     /**
-     * @Description 显示下一条
-     * @Param query:问题详情 ,nextType=-1:已经是第一条,nextType=1:不是第一条 , currentId: , updateReadCount:
+     * 显示下一条
+     * @Param query:问题详情
+     * @Param nextType=-1:已经是第一条； nextType=1:不是第一条 ,
+     * @Param currentId: ,
+     * @Param updateReadCount:阅读数量
      */
     @Override
     public QuestionInfo showDetailNext(QuestionInfoQuery query, Integer nextType, Integer currentId, boolean updateReadCount) {
@@ -82,9 +85,11 @@ public class QuestionInfoServiceImpl extends ServiceImpl<QuestionInfoMapper, Que
         if (nextType == null) {
             queryWrapper.eq(QuestionInfo::getQuestionId, currentId);
         } else if (nextType == 1) {
+            // 上一条
             queryWrapper.lt(QuestionInfo::getQuestion, currentId);
             queryWrapper.orderByDesc(QuestionInfo::getQuestionId);
         } else if (nextType == -1) {
+            // 下一条
             queryWrapper.gt(QuestionInfo::getQuestionId, currentId);
             queryWrapper.orderByAsc(QuestionInfo::getQuestionId);
         }
@@ -96,6 +101,7 @@ public class QuestionInfoServiceImpl extends ServiceImpl<QuestionInfoMapper, Que
         } else if (questionInfo == null && nextType == 1) {
             throw new BusinessException(ResultCode.ERROR_OTHER, "已经是最后一条了");
         }
+        // 更新阅读数量
         if (updateReadCount && questionInfo != null) {
             aCommonMapper.updateCount(Constants.TABLE_NAME_QUESTION_INFO, 1, null, currentId);
             questionInfo.setReadCount((questionInfo.getReadCount() == null ? 0 : questionInfo.getReadCount()) + 1);
@@ -152,20 +158,26 @@ public class QuestionInfoServiceImpl extends ServiceImpl<QuestionInfoMapper, Que
         questionInfoMapper.updateBatchByQIFId(list, questionInfo);
     }
 
+    /**
+     * 导入处理
+     * @param file 文件
+     * @param sessionUserAdminDto 用户
+     */
     @Override
     public List<ImportErrorItem> importQuestion(MultipartFile file, SessionUserAdminDto sessionUserAdminDto) {
         List<Category> categories = categoryService.loadAllCategoryByType(CategoryTypeEnum.QUESTION);
-        // 将分类列表转换为以分类名为键，分类对象为值的 Map
+        // 将分类列表转换为以分类对象的名为键，分类对象为值的 Map
         Map<String, Category> categoryMap = categories.stream().collect(Collectors.toMap(Category::getCategoryName, Function.identity(), (data1, data2) -> data2));
         // 从 Excel 文件中读取数据，并将数据存储在一个二维列表中
         List<List<String>> dataList = ExcelUtils.readExcel(file, Constants.EXCEL_TITLE_QUESTION, 1);
 
+        // 错误列
         ArrayList<ImportErrorItem> errorList = new ArrayList<>();
 
         ArrayList<QuestionInfo> questionList = new ArrayList<>();
 
+        // 因为模板中第三行开始才是数据，所以定义为2
         Integer dataRowNum = 2;
-
         for (List<String> row : dataList) {
             if (errorList.size() > Constants.LENGTH_50) {
                 throw new BusinessException(ResultCode.ERROR_600, "错误数据超过" + Constants.LENGTH_50 + "行，请认真检查数据后再导入");
@@ -174,19 +186,20 @@ public class QuestionInfoServiceImpl extends ServiceImpl<QuestionInfoMapper, Que
             List<String> errorItemList = new ArrayList<>();
 
             Integer index = 0;
-
+            // 标题
             String title = row.get(index++);
             if (!StringUtils.hasText(title) || title.length() > Constants.LENGTH_150) {
                 errorItemList.add("标题不能为空，且长度不能超过" + Constants.LENGTH_150);
             }
+            // 分类
             String categoryName = row.get(index++);
             Category category = categoryMap.get(categoryName);
             if (category == null) {
                 errorItemList.add("分类名称不存在");
             }
+            // 难度
             String difficultyLevel = row.get(index++);
             Integer difficultyLevelInt = null;
-
             if (VerifyUtils.verify(VerifyRegexEnum.POSITIVE_INTEGER, difficultyLevel)) {
                 difficultyLevelInt = Integer.parseInt(difficultyLevel);
                 if (difficultyLevelInt > 5) {
@@ -195,11 +208,15 @@ public class QuestionInfoServiceImpl extends ServiceImpl<QuestionInfoMapper, Que
             } else {
                 errorItemList.add("难度必须是正整数");
             }
+            // 问题描述
             String question = row.get(index++);
+            // 答题详解
             String answerAnalysis = row.get(index++);
             if (!StringUtils.hasText(answerAnalysis)) {
                 errorItemList.add("答案不能为空");
             }
+
+            // 有错误则添加错误信息
             if (!errorItemList.isEmpty() || !errorList.isEmpty()) {
                 ImportErrorItem errorItem = new ImportErrorItem();
                 errorItem.setRowNum(dataRowNum);
@@ -208,6 +225,7 @@ public class QuestionInfoServiceImpl extends ServiceImpl<QuestionInfoMapper, Que
                 continue;
             }
 
+            // 没错误，保存信息
             QuestionInfo questionInfo = new QuestionInfo();
             questionInfo.setTitle(title);
             questionInfo.setCategoryId(category.getCategoryId());
@@ -224,6 +242,7 @@ public class QuestionInfoServiceImpl extends ServiceImpl<QuestionInfoMapper, Que
         if (questionList.isEmpty()) {
             return errorList;
         }
+        // 批量存入
         this.questionInfoMapper.insertBatch(questionList);
         return errorList;
     }

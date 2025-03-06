@@ -14,7 +14,7 @@ public class MyBatisPlusConfig {
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         interceptor.addInnerInterceptor(new
-                PaginationInnerInterceptor(DbType.MYSQL));//由于各个数据库的语法会有差别，因此，要指明数据库类型
+                PaginationInnerInterceptor(DbType.MYSQL)); // 由于各个数据库的语法会有差别，因此要指明数据库类型
         return interceptor;
     }
 }

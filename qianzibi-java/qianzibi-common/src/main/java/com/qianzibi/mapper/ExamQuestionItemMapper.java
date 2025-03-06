@@ -3,6 +3,8 @@ package com.qianzibi.mapper;
 import com.qianzibi.entity.po.ExamQuestionItem;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
 * @author 86158
 * @description 针对表【exam_question_item】的数据库操作Mapper
@@ -11,6 +13,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface ExamQuestionItemMapper extends BaseMapper<ExamQuestionItem> {
 
+        Integer insertBatchSomeColumn(List<ExamQuestionItem> entityList);
 }
 
 

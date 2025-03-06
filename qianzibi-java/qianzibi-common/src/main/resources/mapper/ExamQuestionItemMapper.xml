@@ -15,4 +15,13 @@
         item_id,question_id,title,
         sort
     </sql>
+
+<!--    批量插入-->
+    <insert id="insertBatchSomeColumn" parameterType="java.util.List">
+        INSERT INTO exam_question_item (question_id, title, sort)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.questionId}, #{item.title}, #{item.sort})
+        </foreach>
+    </insert>
 </mapper>

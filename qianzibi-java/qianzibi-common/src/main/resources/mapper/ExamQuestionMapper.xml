@@ -15,7 +15,7 @@
             <result property="questionAnswer" column="question_answer" jdbcType="VARCHAR"/>
             <result property="answerAnalysis" column="answer_analysis" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="statu" column="statu" jdbcType="TINYINT"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
             <result property="createUserId" column="create_user_id" jdbcType="VARCHAR"/>
             <result property="createUserName" column="create_user_name" jdbcType="VARCHAR"/>
             <result property="postUserType" column="post_user_type" jdbcType="TINYINT"/>
@@ -25,7 +25,38 @@
         question_id,title,category_id,
         category_name,difficulty_level,question_type,
         question,question_answer,answer_analysis,
-        create_time,statu,create_user_id,
+        create_time,status,create_user_id,
         create_user_name,post_user_type
     </sql>
+
+    <update id="updateBatchStatus">
+        update exam_question
+        <set>
+            <if test="query.status!=null">
+                status =#{query.status},
+            </if>
+        </set>
+        where
+        question_id in
+        (<foreach collection="List" item="item" separator=",">
+        #{item}
+    </foreach>)
+    </update>
+
+    <insert id="insertBatchSomeColumn" parameterType="java.util.List">
+        INSERT INTO exam_question (
+        title, category_id, category_name, difficulty_level,
+        question_type, question, question_answer, answer_analysis,
+        create_time, status, create_user_id, create_user_name
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.title}, #{item.categoryId}, #{item.categoryName},
+            #{item.difficultyLevel}, #{item.questionType}, #{item.question},
+            #{item.questionAnswer}, #{item.answerAnalysis}, #{item.createTime},
+            #{item.status}, #{item.createUserId}, #{item.createUserName}
+            )
+        </foreach>
+    </insert>
 </mapper>

@@ -45,7 +45,7 @@ public class QuestionInfoController {
         queryWrapper.eq(query.getDifficultyLevel() != null, QuestionInfo::getDifficultyLevel, query.getDifficultyLevel());
         queryWrapper.eq(query.getStatus() != null, QuestionInfo::getStatus, query.getStatus());
         queryWrapper.eq(query.getCategoryId() != null, QuestionInfo::getCategoryId, query.getCategoryId());
-        queryWrapper .orderByDesc(QuestionInfo::getQuestionId);
+        queryWrapper.orderByDesc(QuestionInfo::getQuestionId);
         return R.ok().data(questionInfoService.page(new Page<>(query.getCurrent(), query.getPageSize()), queryWrapper));
     }
 

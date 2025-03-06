@@ -2,6 +2,9 @@ package com.qianzibi.mapper;
 
 import com.qianzibi.entity.po.ExamQuestion;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author 86158
@@ -11,6 +14,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface ExamQuestionMapper extends BaseMapper<ExamQuestion> {
 
+    void updateBatchStatus(@Param("List") List<String> questionIds, @Param("query") ExamQuestion examQuestion);
+
+    void insertBatchSomeColumn(List<ExamQuestion> examQuestionList);
 }
 
 

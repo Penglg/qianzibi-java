@@ -1,5 +1,7 @@
 package com.qianzibi.entity.po;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.qianzibi.annotation.VerifyParam;
 
 import java.io.Serializable;
@@ -12,6 +14,7 @@ public class Category implements Serializable {
     /**
      * 分类ID
      */
+    @TableId(type = IdType.AUTO)
     private Integer categoryId;
 
     /**
@@ -38,6 +41,7 @@ public class Category implements Serializable {
     /**
      * 0:问题分类; 1:考题分类; 2:问题分类和考题分类
      */
+    @VerifyParam(required = true)
     private Integer type;
 
     private static final long serialVersionUID = 1L;

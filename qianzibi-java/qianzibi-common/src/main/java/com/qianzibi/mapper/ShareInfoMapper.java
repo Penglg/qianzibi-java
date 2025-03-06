@@ -2,6 +2,10 @@ package com.qianzibi.mapper;
 
 import com.qianzibi.entity.po.ShareInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.qianzibi.entity.query.ShareInfoQuery;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author 86158
@@ -11,6 +15,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface ShareInfoMapper extends BaseMapper<ShareInfo> {
 
+    void updateByShareInfoId(@Param("shareIds") List<String> shareIds, @Param("query") ShareInfoQuery shareInfoQuery);
 }
 
 

@@ -1,7 +1,9 @@
 package com.qianzibi.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qianzibi.entity.po.ShareInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qianzibi.entity.query.ShareInfoQuery;
 
 /**
 * @author 86158
@@ -10,4 +12,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface ShareInfoService extends IService<ShareInfo> {
 
+    Page selectPage(ShareInfoQuery query);
+
+    void updateStatus(ShareInfoQuery shareInfoQuery, String shareIds);
+
+    Integer saveShareInfo(ShareInfoQuery shareInfoQuery, Boolean superAdmin);
+
+    void removeBatchShareInfo(String[] splitIds, Integer integer);
+
+    ShareInfo showDetailNext(ShareInfoQuery query, Integer nextType, Integer currentId, boolean b);
 }

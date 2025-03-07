@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianzibi.mapper.AppUpdateMapper">
+
+    <resultMap id="BaseResultMap" type="com.qianzibi.entity.po.AppUpdate">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="version" column="version" jdbcType="VARCHAR"/>
+            <result property="updateDesc" column="update_desc" jdbcType="VARCHAR"/>
+            <result property="updateType" column="update_type" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="grayscaleDevice" column="grayscale_device" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,version,update_desc,
+        update_type,create_time,status,
+        grayscale_device
+    </sql>
+</mapper>

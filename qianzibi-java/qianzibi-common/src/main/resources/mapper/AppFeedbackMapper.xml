@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianzibi.mapper.AppFeedbackMapper">
+
+    <resultMap id="BaseResultMap" type="com.qianzibi.entity.po.AppFeedback">
+            <id property="feedbackId" column="feedback_id" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="pFeedbackId" column="p_feedback_id" jdbcType="INTEGER"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+            <result property="sendType" column="send_type" jdbcType="TINYINT"/>
+            <result property="clientLastSendTime" column="client_last_send_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        feedback_id,user_id,nick_name,
+        content,create_time,p_feedback_id,
+        status,send_type,client_last_send_time
+    </sql>
+</mapper>

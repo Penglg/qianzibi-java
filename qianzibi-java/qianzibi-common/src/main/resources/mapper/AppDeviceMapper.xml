@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianzibi.mapper.AppDeviceMapper">
+
+    <resultMap id="BaseResultMap" type="com.qianzibi.entity.po.AppDevice">
+            <id property="deviceId" column="device_id" jdbcType="VARCHAR"/>
+            <result property="deviceBrand" column="device_brand" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="lastUseTime" column="last_use_time" jdbcType="TIMESTAMP"/>
+            <result property="ip" column="ip" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        device_id,device_brand,create_time,
+        last_use_time,ip
+    </sql>
+</mapper>

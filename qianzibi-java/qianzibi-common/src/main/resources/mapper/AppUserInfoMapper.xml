@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianzibi.mapper.AppUserInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.qianzibi.entity.po.AppUserInfo">
+            <id property="userId" column="user_id" jdbcType="VARCHAR"/>
+            <result property="email" column="email" jdbcType="VARCHAR"/>
+            <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+            <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
+            <result property="sex" column="sex" jdbcType="TINYINT"/>
+            <result property="joinTime" column="join_time" jdbcType="TIMESTAMP"/>
+            <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP"/>
+            <result property="lastUseDeviceId" column="last_use_device_id" jdbcType="VARCHAR"/>
+            <result property="lastUseDeviceBrand" column="last_use_device_brand" jdbcType="VARCHAR"/>
+            <result property="lastLoginIp" column="last_login_ip" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_id,email,nick_name,
+        avatar,password,sex,
+        join_time,last_login_time,last_use_device_id,
+        last_use_device_brand,last_login_ip,status
+    </sql>
+</mapper>
